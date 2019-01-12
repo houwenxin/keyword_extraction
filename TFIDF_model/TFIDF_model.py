@@ -7,7 +7,7 @@ Created on Fri Jan 11 19:56:15 2019
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 import utils
-import jieba.analyse
+import jieba
 from sklearn.externals import joblib
 import numpy as np
 

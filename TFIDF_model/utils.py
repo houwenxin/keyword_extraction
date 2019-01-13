@@ -9,7 +9,27 @@ Data Type = ID € TITLE € CONTENT € TAGS
 @author: houwenxin
 """
 
-full_data_path = "./full_data.txt"
+import pyltp
+import jieba
+
+default_segmentor = "pyltp"
+cws_model_path = "D:\\Study\\Nanjing_University\\Thesis\\ltp_data_v3.4.0\\cws.model"
+
+class segmentor:
+    def __init__(self, segmentor=default_segmentor):
+        self.segmentor = segmentor
+        if self.segmentor == "pyltp":
+            self.ltp_segmentor = pyltp.Segmentor()
+            self.ltp_segmentor.load(cws_model_path)
+    def segment(self,sentence):
+        if self.segmentor == "jieba":
+            sentence_words = list(jieba.cut(sentence, cut_all=False))
+        elif self.segmentor == "pyltp":
+            sentence_words = list(self.ltp_segmentor.segment(sentence))
+        return sentence_words
+    def __del__(self):
+        if self.segmentor == "pyltp":
+            self.ltp_segmentor.release()            
 
 def load_data(file_path, max_tag_num = 100):
     documents = []
@@ -29,6 +49,11 @@ def load_data(file_path, max_tag_num = 100):
     print("Data Size: ", len(documents))
     return documents, labels
 
+def load_stop_word(file_path):
+    stopwords = [line.strip() for line in open(file_path, "r", encoding="utf-8").readlines()]
+    print("Stop words loaded from \'{}\'".format(file_path))
+    return stopwords
+
 def list_to_str(lst):
     string = "" + lst[0]
     for i in range(1, len(lst)):
@@ -36,7 +61,7 @@ def list_to_str(lst):
         string += lst[i]
     return string
         
-def test():
+def test(full_data_path):
     documents, labels = load_data(full_data_path)
     print(documents[0])
     print(labels[0])

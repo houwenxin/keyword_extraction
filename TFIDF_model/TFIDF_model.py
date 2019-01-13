@@ -7,23 +7,17 @@ Created on Fri Jan 11 19:56:15 2019
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 import utils
-import jieba
 from sklearn.externals import joblib
 import numpy as np
 
-full_data_path = "data/full_data.txt"
-stop_word_path = "lib/chinese_stop_word_more.txt"
-
-def load_stop_word(file_path):
-    stopwords = [line.strip() for line in open(file_path, "r", encoding="utf-8").readlines()]
-    print("Stop words loaded from \'{}\'".format(file_path))
-    return stopwords
-
 def TFIDF_keyword_extraction(documents, stopwords, extract_num=1):
     all_documents = []
+    seg = utils.segmentor()
     for document in documents:
-        document = list(jieba.cut(document, cut_all=False)) 
+        document = list(seg.segment(document)) 
         all_documents.append(" ".join(document))
+    
+    del seg, documents
     
     vectorizer = TfidfVectorizer(token_pattern=r"(?u)\b\w+\b", max_df=0.75, stop_words=stopwords)
     model = vectorizer.fit(all_documents)
@@ -32,7 +26,7 @@ def TFIDF_keyword_extraction(documents, stopwords, extract_num=1):
     tfidf_array = tfidf.toarray()
     print("TF-IDF Data Matrix Size: ", tfidf_array.shape)
     
-    del documents, all_documents, stopwords, tfidf, model # 释放没用的内存
+    del all_documents, stopwords, tfidf, model # 释放没用的内存
     
     dictionary = dict(zip(vectorizer.vocabulary_.values(), vectorizer.vocabulary_.keys()))
     keywords = []
@@ -59,10 +53,13 @@ def write_result_to(file_path, true_keywords, pred_keywords):
     print("Done.")
 
 if __name__ == "__main__":
+    full_data_path = "data/full_data.txt"
+    stop_word_path = "lib/chinese_stop_word_more.txt"
+
     documents, true_keywords = utils.load_data(full_data_path)
-    stopwords = load_stop_word(stop_word_path)
-    pred_keywords = TFIDF_keyword_extraction(documents, stopwords, extract_num=1)
-    del stopwords, documents # 继续释放内存
+    stopwords = utils.load_stop_word(stop_word_path)
+    pred_keywords = TFIDF_keyword_extraction(documents, stopwords, extract_num=3)
+    del stopwords, documents #   继续释放内存
     result_file_path = "result/tfidf_true_pred_pairs.txt"
     write_result_to(result_file_path, true_keywords, pred_keywords)
     

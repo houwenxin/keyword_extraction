@@ -24,9 +24,6 @@ Output Data Type = ID € TITLE € CONTENT € TAGS
 import json
 from html.parser import HTMLParser
 
-src_file_path = "../data/NetEaseNewsKeywordPost.dat"
-dest_file_path = "full_data.txt"
-
 def convert_data(file_path):
     full_data = []
     html_parser = HTMLParser()
@@ -51,5 +48,7 @@ def write_full_data(file_path, full_data):
     print("Processed full data successfully written to {}.".format(dest_file_path))
 
 if __name__ == "__main__":
+    src_file_path = "../data/NetEaseNewsKeywordPost.dat"
+    dest_file_path = "full_data.txt"
     full_data = convert_data(src_file_path)
     write_full_data(dest_file_path, full_data)

@@ -1,0 +1,11 @@
+Jieba extract_num=3
+Document Number:  13702
+Precision:  0.2505230379993259
+Recall:  0.3043165405119911
+F1 Score:  0.26651537372601014
+
+LTP extract_num=3
+Document Number:  13702
+Precision:  0.24556025884299812
+Recall:  0.29984639016897724
+F1 Score:  0.2617012810086913

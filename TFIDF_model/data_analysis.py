@@ -23,7 +23,7 @@ def analysis(documents, labels):
         avg_doc_len += doc_len
         if doc_len > max_doc_len:
             max_doc_len = doc_len
-            print("Large length of document: {}, length: {} ".format(i, doc_len))
+            print("Larger length of document: {}, length: {} ".format(i, doc_len))
         if doc_len < min_doc_len:
             min_doc_len = doc_len
         keywords = labels[i]
